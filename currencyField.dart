@@ -12,7 +12,6 @@ class CurrencyTextField extends StatefulWidget {
     required this.colorText,
     required this.fontSize,
     required this.borderRadius,
-    required this.fillColor,
     required this.borderColor,
     required this.borderColorFocus,
   }) : super(key: key);
@@ -23,7 +22,6 @@ class CurrencyTextField extends StatefulWidget {
   final Color colorText;
   final double fontSize;
   final double borderRadius;
-  final Color fillColor;
   final Color borderColor;
   final Color borderColorFocus;
 
@@ -57,16 +55,16 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
           fontSize: widget.fontSize,
         ),
         decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: widget.borderColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: widget.borderColorFocus),
-            ),
-            filled: true,
-            fillColor: widget.fillColor),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderSide: BorderSide(color: widget.borderColor, width: 1.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderSide: BorderSide(color: widget.borderColorFocus),
+          ),
+          filled: false,
+        ),
         onChanged: (text) {
           print("valor fomartValue");
           print(text);
@@ -76,4 +74,3 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
     );
   }
 }
-
