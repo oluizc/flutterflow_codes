@@ -38,7 +38,7 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
   void initState() {
     super.initState();
 
-    // Chamado quando o widget é inserido na árvore de widgets pela primeira vez
+    // Chamado quando o widget é inserido na árvore de widgets pela primeira vez, atualiza o valor do AppState. *Alterar o nome para o seu AppState.
     FFAppState().valorCurrencyField1 = widget.valor;
   }
 
@@ -74,8 +74,9 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
       ),
       onChanged: (text) {
         print(text);
+        //*Alterar o nome para o seu AppState.
         FFAppState().valorCurrencyField1 = text;
-        //Ação para capturar o valor do app state e colocar em outro state (page ou component)
+        //Ação para executar no onChange do textField. Ex.: capturar o valor do app state e colocar em outro state (page ou component). 
         widget.onChangeAction();
       },
     );
