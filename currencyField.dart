@@ -1,11 +1,12 @@
 // dependencie: currency_text_input_formatter: ^2.1.10
 
+import 'dart:async';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/services.dart';
 
 class CurrencyTextField extends StatefulWidget {
   const CurrencyTextField({
-    Key? key,
+    super.key,
     this.width,
     this.height,
     required this.valor,
@@ -15,47 +16,51 @@ class CurrencyTextField extends StatefulWidget {
     required this.borderColor,
     required this.borderColorFocus,
     required this.onChangeAction,
-  }) : super(key: key);
+  });
 
   final double? width;
   final double? height;
-  final String valor;
+  final double valor;
   final Color colorText;
   final double fontSize;
   final double borderRadius;
   final Color borderColor;
   final Color borderColorFocus;
-  final Future<dynamic> Function() onChangeAction;
+  final Future Function(double valor) onChangeAction;
 
   @override
   _CurrencyTextFieldState createState() => _CurrencyTextFieldState();
+
+  String _formatCurrencyValue(double value) {
+    return NumberFormat.currency(locale: 'pt_BR', symbol: '').format(value);
+  }
 }
 
 class _CurrencyTextFieldState extends State<CurrencyTextField> {
   bool isHovered = false;
+  late Timer _debounce;
 
   @override
   void initState() {
     super.initState();
-
-    // Chamado quando o widget é inserido na árvore de widgets pela primeira vez, atualiza o valor do AppState. *Alterar o nome para o seu AppState.
-    FFAppState().valorCurrencyField1 = widget.valor;
+    _debounce = Timer(Duration(milliseconds: 1500), () {});
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: widget.valor,
-      keyboardType: TextInputType.number,
+      initialValue: widget._formatCurrencyValue(widget.valor),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         CurrencyTextInputFormatter(
           locale: 'pt_BR',
           decimalDigits: 2,
-          symbol: 'R\$',
+          symbol: '',
           enableNegative: false,
         ),
         LengthLimitingTextInputFormatter(16),
       ],
+      textAlign: TextAlign.right,
       style: TextStyle(
         fontWeight: FontWeight.normal,
         color: widget.colorText,
@@ -73,11 +78,14 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
         filled: false,
       ),
       onChanged: (text) {
-        print(text);
-        //*Alterar o nome para o seu AppState.
-        FFAppState().valorCurrencyField1 = text;
-        //Ação para executar no onChange do textField. Ex.: capturar o valor do app state e colocar em outro state (page ou component). 
-        widget.onChangeAction();
+        _debounce.cancel();
+        _debounce = Timer(Duration(milliseconds: 1500), () {
+          final double parsedValue = double.tryParse(
+                text.replaceAll('.', '').replaceFirst(RegExp(r','), '.'),
+              ) ??
+              0.0;
+          widget.onChangeAction(parsedValue);
+        });
       },
     );
   }
