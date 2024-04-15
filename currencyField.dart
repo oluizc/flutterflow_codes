@@ -1,4 +1,4 @@
-// dependencie: currency_text_input_formatter: ^2.1.10
+// dependencie: currency_text_input_formatter: ^2.2.0
 
 import 'dart:async';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
@@ -52,7 +52,7 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
       initialValue: widget._formatCurrencyValue(widget.valor),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
-        CurrencyTextInputFormatter(
+        CurrencyTextInputFormatter.currency(
           locale: 'pt_BR',
           decimalDigits: 2,
           symbol: '',
