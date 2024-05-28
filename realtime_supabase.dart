@@ -1,20 +1,22 @@
 //conectar
-import 'package:realtime_client/realtime_client.dart';
-
 Future conectar(
   String tabela,
-  Future<dynamic> Function() acao,
+  String iduser,
+  Future Function() acao,
 ) async {
-  // Add your function code here!
   final supabase = SupaFlow.client;
-  String table = tabela;
-  final channelName = 'public:' + table;
+  final channelName = 'public:$tabela';
   final channel = supabase.channel(channelName);
+  String table = tabela;
 
   // Configura a nova inscrição
   channel.on(
     RealtimeListenTypes.postgresChanges,
-    ChannelFilter(event: '*', schema: 'public', table: table),
+    ChannelFilter(
+        event: '*',
+        schema: 'public',
+        table: table,
+        filter: 'resp_autor=eq.$iduser'),
     (payload, [ref]) {
       acao();
       print('Reloaded.');
