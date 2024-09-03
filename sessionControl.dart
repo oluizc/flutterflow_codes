@@ -1,4 +1,5 @@
-//Executar no main.dart
+// Cria uma session_id, considerando fechamento e segundo plano do app, e atualiza num appState.
+// Executar no main.dart
 
 Future sessionControl() async {
   // Gere um novo session_id se necessário
