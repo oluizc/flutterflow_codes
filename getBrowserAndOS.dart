@@ -1,4 +1,5 @@
 // Obtém o nome do Browser e OS onde a aplicação está sendo executada.
+// Dependencia universal_html: ^2.2.4
 
 import 'package:universal_html/html.dart' as html;
 
