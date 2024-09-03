@@ -1,4 +1,5 @@
 // Escuta a chamda de deep linking e executa uma action (redirect, por exemplo).
+// Dependencia uni_links2: ^0.6.0+2
 
 import 'package:uni_links2/uni_links.dart';
 import 'dart:async';
