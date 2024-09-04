@@ -29,7 +29,29 @@ Future getUserInfo() async {
         userNome: userInfo['user_nome'],
         userFoto: userInfo['user_foto'],
         userEmail: userInfo['user_email'],
+        regrasView: [], // Inicializa a lista vazia para ser preenchida depois
       );
+
+      // Faz a consulta na view 'view_user_regras' para obter os ids das regras de visualização associadas ao usuário
+      final responseRegras = await supabase
+          .from('view_user_regras')
+          .select('regra_visualizacao_id')
+          .eq('user_id', currentUser.id)
+          .execute();
+
+      if (responseRegras.status == 200 && responseRegras.data != null) {
+        // Extrai os IDs das regras e armazena no App State
+        final regrasIds = (responseRegras.data as List<dynamic>)
+            .map((item) => item['regra_visualizacao_id'] as int)
+            .toList();
+
+        // Atualiza o AppState com os IDs das regras
+        FFAppState().update(() {
+          FFAppState().currentUserData.regrasView = regrasIds;
+        });
+      } else {
+        print('Nenhuma regra de visualização encontrada para o usuário.');
+      }
     } else {
       // Se a tabela não for encontrada ou não houver dados, a action é finalizada sem travar
       print('Tabela de usuários não encontrada ou nenhum dado retornado.');
