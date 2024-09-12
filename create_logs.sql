@@ -10,6 +10,7 @@ RETURNS TRIGGER AS $$
 DECLARE
   user_nome TEXT;
   user_email TEXT;
+  cliente_data JSONB;
 BEGIN
   -- Buscar o nome e o e-mail do usuário que fez a inserção
   SELECT u.user_nome, u.user_email
@@ -17,7 +18,19 @@ BEGIN
   FROM users u
   WHERE u.user_id = auth.uid()::uuid;  -- Cast explícito de auth.uid() para UUID
 
-  -- Inserir o log para a inserção, incluindo todos os campos do cliente
+  -- Formatar os dados do cliente como um array JSON, com cada coluna sendo um objeto separado
+  SELECT jsonb_agg(
+    jsonb_build_object(
+      'column', col.column_name,
+      'new', to_jsonb(NEW) -> col.column_name,
+      'old', ''
+    )
+  )
+  INTO cliente_data
+  FROM information_schema.columns col
+  WHERE col.table_name = 'clientes';  -- Iterar sobre todas as colunas da tabela clientes
+
+  -- Inserir o log para a inserção
   INSERT INTO logs_clientes (cliente_id, created_at, data, ref_tipo_log_id)
   VALUES (
     NEW.cliente_id,  -- ID do cliente inserido
@@ -28,8 +41,8 @@ BEGIN
       'cliente_id', NEW.cliente_id,
       'razao_social', NEW.razao_social,
       'cnpj', NEW.cnpj,
-      'data', to_jsonb(NEW)  -- Inclui todas as colunas do cliente no log
-    ),  -- Inclui as informações do usuário e o log de inserção com todos os dados do cliente
+      'data', cliente_data  -- Insere os dados formatados como array de colunas
+    ),
     2  -- ID do tipo de log, que corresponde a "insert"
   );
 
