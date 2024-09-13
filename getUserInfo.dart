@@ -13,7 +13,7 @@ Future getUserInfo() async {
     final response = await supabase
         .from('users')
         .select()
-        .eq('id', currentUser.id)
+        .eq('user_id', currentUser.id)
         .single()
         .execute();
 
