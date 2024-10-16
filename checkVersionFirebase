@@ -1,0 +1,70 @@
+// Atualiza um app state com a versão atual do app e compara com a versão de uma colection do firestore de controle de versão do app.
+// Dependencia package_info_plus: ^8.0.0
+// Executar no main.dart
+
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore
+import 'package:package_info_plus/package_info_plus.dart'; // Para obter a versão do app
+
+Future checkVersion() async {
+  // Obtenha a versão atual do app
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String currentVersion = packageInfo.version;
+
+  // Atualize o FFAppState com a versão atual
+  FFAppState().update(() {
+    FFAppState().currentVersion = currentVersion;
+  });
+
+  // Acesse o Firestore e obtenha a coleção 'new_version_app'
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  QuerySnapshot querySnapshot = await firestore
+      .collection('new_version_app')
+      .orderBy('data_lancamento', descending: true)
+      .limit(1)
+      .get();
+
+  if (querySnapshot.docs.isEmpty) {
+    print('Nenhuma versão encontrada.');
+    return;
+  }
+
+  // Obtenha o documento mais recente e faça o cast para Map<String, dynamic>
+  Map<String, dynamic> latestVersionData =
+      querySnapshot.docs.first.data() as Map<String, dynamic>;
+  String latestVersion = latestVersionData['version_name'];
+
+  // Função para comparar a versão atual com a mais recente
+  bool isVersionLower(String currentVersion, String minimumVersion) {
+    List<String> currentParts = currentVersion.split('.');
+    List<String> minimumParts = minimumVersion.split('.');
+
+    for (int i = 0; i < currentParts.length; i++) {
+      int currentPart = int.parse(currentParts[i]);
+      int minimumPart = int.parse(minimumParts[i]);
+
+      if (currentPart < minimumPart) {
+        return true;
+      } else if (currentPart > minimumPart) {
+        return false;
+      }
+    }
+
+    return false; // As versões são iguais
+  }
+
+  if (isVersionLower(currentVersion, latestVersion)) {
+    FFAppState().update(() {
+      FFAppState().newVersionData = {
+        'version_name': latestVersionData['version_name'],
+        'data_lancamento': latestVersionData['data_lancamento'],
+        'link_download_android': latestVersionData['link_download_android'],
+        'link_download_ios': latestVersionData['link_download_ios'],
+        'mensagem_persistente': latestVersionData['mensagem_persistente'],
+        'disponivel_android': latestVersionData['disponivel_android'],
+        'disponivel_ios': latestVersionData['disponivel_ios'],
+      };
+    });
+  } else {
+    print('Nenhuma nova versão do app foi encontrada!');
+  }
+}
