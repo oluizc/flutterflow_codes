@@ -1,3 +1,9 @@
 Android
+Geral: https://developer.android.com/distribute/play-billing?hl=pt-br
+Fat. Alternativo: https://developer.android.com/google/play/billing/alternative?hl=pt-br
+Notícias: https://canaltech.com.br/apps/google-finalmente-libera-metodo-de-pagamento-alternativo-no-android-229211/
 
 iOS
+Geral: https://developer.apple.com/documentation/sirikit/payments
+Fat. Alternativo: https://developer.apple.com/documentation/storekit/external-purchase
+Notíficas: https://g1.globo.com/tecnologia/noticia/2024/11/26/cade-determina-que-apple-remova-restricoes-de-meios-de-pagamento-no-iphone.ghtml
