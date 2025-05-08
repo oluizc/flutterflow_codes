@@ -1,7 +1,7 @@
-//conectar
+//conectar: Inicia a escuta de eventos na tabela em questão.
 Future conectar(
   String tabela,
-  String iduser,
+  String iduser, //uuid do usuário para realizar filtros
   Future Function() acao,
 ) async {
   final supabase = SupaFlow.client;
@@ -16,7 +16,7 @@ Future conectar(
         event: '*',
         schema: 'public',
         table: table,
-        filter: 'resp_autor=eq.$iduser'),
+        filter: 'resp_autor=eq.$iduser'), //alterar filtro
     (payload, [ref]) {
       acao();
       print('Reloaded.');
@@ -25,7 +25,7 @@ Future conectar(
 }
 
 
-//desconectar
+//desconectar: Para de escutar os eventos.
 Future desconectar(String tabela) async {
   // Add your function code here!
 
