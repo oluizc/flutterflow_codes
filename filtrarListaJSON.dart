@@ -52,11 +52,11 @@ List<dynamic> filtrarListaJSON(
       }).toList();
     } else {
       // Comportamento original: busca em todo o objeto
-      busca = busca.toLowerCase();
+      String buscaLower = busca.toLowerCase();
       listaFiltrada = listaFiltrada.where((item) {
         // Converte o item para string e verifica se contém a busca
         final String itemString = jsonEncode(item).toLowerCase();
-        return itemString.contains(busca);
+        return itemString.contains(buscaLower);
       }).toList();
     }
   }
