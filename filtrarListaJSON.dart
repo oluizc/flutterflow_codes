@@ -1,16 +1,38 @@
+/// Filtra, busca e ordena uma lista de objetos JSON.
+///
+/// Parâmetros:
+///
+/// listaCompleta: Lista de objetos a serem processados (retorna [] se null)
+/// busca: String de busca no formato "campo,valor" ou busca global (ignora se
+/// null)
+/// filtros: Filtros complexos no formato "(campo,operador,valor)" com suporte
+/// a AND/OR (ignora se null)
+/// ordenacao: Ordenação no formato "campo,direção" onde direção é ASC ou DESC
+/// (mantém ordem original se null)
+///
+/// Exemplos de uso:
+///
+/// Busca: "nome,João" ou "João" (busca global)
+/// Filtros: "(idade,>,18)" ou "(status,==,ativo)AND(tipo,!=,admin)"
+/// Ordenação: "nome,ASC" ou "data,DESC"
 List<dynamic> filtrarListaJSON(
-  List<dynamic> listaCompleta,
-  String filtros,
-  String busca,
-  String ordenacao,
+  List<dynamic>? listaCompleta,
+  String? filtros,
+  String? busca,
+  String? ordenacao,
 ) {
   /// MODIFY CODE ONLY BELOW THIS LINE
+
+  // Se a lista for null, retornar array vazio
+  if (listaCompleta == null) {
+    return [];
+  }
 
   // Cópia da lista para trabalhar
   List<dynamic> listaFiltrada = List.from(listaCompleta);
 
   // 1. Aplicar busca (ilike) com suporte para formato "chave,valor"
-  if (busca.isNotEmpty) {
+  if (busca != null && busca.isNotEmpty) {
     List<String> partesBusca = busca.split(',');
 
     if (partesBusca.length >= 2) {
@@ -40,7 +62,7 @@ List<dynamic> filtrarListaJSON(
   }
 
   // 2. Aplicar filtros complexos com novo formato
-  if (filtros.isNotEmpty) {
+  if (filtros != null && filtros.isNotEmpty) {
     // Separar os grupos por operadores lógicos
     List<String> grupos = [];
     List<String> operadoresLogicos = [];
@@ -101,7 +123,7 @@ List<dynamic> filtrarListaJSON(
   }
 
   // 3. Aplicar ordenação
-  if (ordenacao.isNotEmpty) {
+  if (ordenacao != null && ordenacao.isNotEmpty) {
     final partes = ordenacao.split(',');
     if (partes.length == 2) {
       final campo = partes[0];
