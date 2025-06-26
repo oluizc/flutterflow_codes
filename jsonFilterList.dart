@@ -12,7 +12,7 @@
 /// Search: "name,John" or "John" (global search)
 /// Filters: "(age,>,18)" or "(status,==,active)AND(type,!=,admin)"
 /// Sorting: "name,ASC" or "date,DESC"
-List<dynamic> filterJSONList(
+List<dynamic> jsonFilterList(
   List<dynamic>? completeList,
   String? filters,
   String? search,
