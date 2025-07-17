@@ -14,6 +14,7 @@ Future<dynamic> returnMediaData(
   if (media == null) {
     return {
       'base64': '',
+      'bytes': null, // Adicionado
       'fileSize': '',
       'fileName': '',
       'fileType': '',
@@ -54,6 +55,7 @@ Future<dynamic> returnMediaData(
     if (fileSizeInBytes > maxBytes) {
       return {
         'base64': '',
+        'bytes': null, // Adicionado
         'fileSize': fileSizeString, // Ex: "2.34 MB"
         'fileName': fileName,
         'fileType': fileType,
@@ -79,6 +81,7 @@ Future<dynamic> returnMediaData(
       if (!tempFile.existsSync()) {
         return {
           'base64': '',
+          'bytes': null, // Adicionado
           'fileSize': fileSizeString,
           'fileName': fileName,
           'fileType': fileType,
@@ -97,6 +100,7 @@ Future<dynamic> returnMediaData(
         await tempFile.delete();
         return {
           'base64': '',
+          'bytes': null, // Adicionado
           'fileSize': fileSizeString,
           'fileName': fileName,
           'fileType': fileType,
@@ -109,6 +113,7 @@ Future<dynamic> returnMediaData(
     } catch (e) {
       return {
         'base64': '',
+        'bytes': null, // Adicionado
         'fileSize': fileSizeString,
         'fileName': fileName,
         'fileType': fileType,
@@ -123,6 +128,7 @@ Future<dynamic> returnMediaData(
   // 4) Retorna JSON final
   return {
     'base64': base64String,
+    'bytes': media.bytes, // Adicionado - retorna os bytes diretamente
     'fileSize': fileSizeString, // ex: "123 B", "45.67 KB", "12.34 MB"
     'fileName': fileName,
     'fileType': fileType,
